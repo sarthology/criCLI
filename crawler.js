@@ -13,6 +13,7 @@ var c = new Crawler({
             // Fetching Values from Cricbuzz Server
            
             var matchHeader = $(".cb-lv-main").first().children(".cb-lv-scr-mtch-hdr").text();
+            var startTime = $(".cb-lv-main").first().find(".cb-schdl").children().text();
             var scoreCard = $(".cb-lv-main").first().find(".cb-scr-wll-chvrn").children().first().text();
             var scoreCard = scoreCard.split("  •  ")
             var liveCommentary = $(".cb-lv-main").first().find(".cb-scr-wll-chvrn").children(".cb-text-live").text();
@@ -24,8 +25,14 @@ var c = new Crawler({
             console.log("       🏏 CriCLI 🏏");
             console.log(clc.redBright(matchHeader));
             console.log("--------------------------");
-            console.log(clc.cyanBright(scoreCard[0]));
-            console.log(clc.cyanBright(scoreCard[1]));
+            if(!scoreCard[0] & !scoreCard[1]){
+                console.log("☹️  Match not Started Yet !! ☹️");
+            }
+            else{
+                console.log(clc.cyanBright(scoreCard[0]));
+                console.log(clc.cyanBright(scoreCard[1]));
+            }
+
             if(liveCommentary){
                 console.log(liveCommentary);
             }
