@@ -54,3 +54,4 @@ var MatchIndex =  require('./MatchIndex')
 MatchIndex.crawlerFunction(criclnk, options);
 
 program.parse(process.argv);
+
