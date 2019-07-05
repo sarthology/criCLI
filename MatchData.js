@@ -20,7 +20,11 @@ function matchStats(link, option) {
             this.status = JSONData.status;
             this.venue = JSONData.venue;
             this.score = JSONData.score;
-      
+            this.toss = JSONData.toss;
+            this.umpireName = JSONData.official;
+            this.commentary = JSONData.comm_lines;
+            this.state = JSONData.state;
+
 
             // Header 
 
@@ -65,7 +69,11 @@ function matchStats(link, option) {
             //--------------------  START MATCH CONCLUDED BLOCK ------------------------- 
             else if (this.state == 'mom') {
 
-  
+                // Check For Toss
+                if (option.includes("t")) {
+                    console.log(clc.blueBright(JSONData.toss.winner + " won the toss and opted for " + JSONData.toss.decision));
+                }
+
 
                 // Print Match Summary
                 if (JSONData.team1.s_name && JSONData.team2.s_name) {
@@ -93,8 +101,26 @@ function matchStats(link, option) {
 
 
 
-          
+                // Print Recent Over
+                if (option.includes("r"))
+                    console.log("Recent: " + clc.yellowBright(this.score.prev_overs))
+            }
 
+
+            // -------------------    MATCH CONCLUDED BLOCK  ENDED ----------------------
+
+
+            //--------------------  MATCH TOSS BLOCK --------------------------------- 
+            else if (this.state == 'toss') {
+                if (this.toss)
+                    console.log(clc.cyanBright("\n🎉  ") + clc.yellowBright(this.toss.winner) + " won the toss and opted for " + clc.yellowBright(this.toss.decision) + " 🎉\n");
+
+
+            }
+
+
+
+            // -------------------    MATCH TOSS BLOCK  ENDED----------------------
 
 
             //--------------------  MATCH LIVE BLOCK --------------------------------- 
@@ -120,6 +146,9 @@ function matchStats(link, option) {
 
                 }
 
+
+                if (this.status && option.includes("t"))
+                    console.log(clc.cyanBright("Toss:" + this.status));
 
 
                 if (this.score.crr)
@@ -184,7 +213,11 @@ function matchStats(link, option) {
 
 
 
-         
+                if (this.score.prev_overs && option.includes("r")) {
+                    console.log("-------------------------------------------");
+                    console.log(clc.cyanBright("Recent: " + this.score.prev_overs));
+                }
+
 
                 if (this.score.prtshp)
                     console.log("Partnership: " + clc.blueBright(this.score.prtshp))
@@ -216,6 +249,11 @@ function matchStats(link, option) {
             if (this.venue.name)
                 console.log(clc.cyanBright("\nAt " + this.venue.name + " in " + this.venue.location))
 
+            if (this.umpireName && option.includes("u"))
+                console.log("Umpires: " + clc.blueBright(this.umpireName.umpire1.name + ", " + this.umpireName.umpire2.name));
+            
+            console.log("\n");
+            //--------------------  End of code --------------------------------- 
             
 
         }
