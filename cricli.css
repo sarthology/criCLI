@@ -31,7 +31,7 @@ body {
 
 footer {
   background-color: #f2f4f5;
-  height: 150px;
+  padding: 30px;
 }
 
 h1 {
@@ -73,9 +73,6 @@ h3 {
 }
 
 .thanks {
-  padding-top:57px;
-  /* padding-top: 100px; */
-  text-align: center;
   font-size: 30px;
 }
 
@@ -87,7 +84,7 @@ h3 {
   height: auto;
   /* border-radius: 20px; */
   font-size: 1.1em;
-  font-weight: 600;
+  /* font-weight: 600; */
   font-family: 'sofia';
   display: block;
 }
@@ -102,8 +99,8 @@ h3 {
 
 .par {
   font-size: 16px;
-    color: #1d1d1d;
-    line-height: 30px;
+  color: #1d1d1d;
+  line-height: 30px;
   display: grid;
   align-content: center;
   font-weight: 800;
@@ -162,7 +159,6 @@ a {
 }
 
 .command {
-  
   font-family: "hack";
   color: black;
   background-color: rgb(238, 238, 248);
@@ -170,9 +166,9 @@ a {
   /* border-radius: 5px; */
   padding: 10px;
   text-align: center;
-  font-size:1em;
-  letter-spacing:1px;
-  font-weight:500;
+  font-size: 1em;
+  letter-spacing: 1px;
+  font-weight: 500;
 }
 
 .command-2 {
@@ -186,16 +182,71 @@ a {
   text-align: center;
   font-size: 1em;
   letter-spacing: 1px;
-  font-weight:500;
+  font-weight: 500;
 }
 
-@media(max-width:1024px) {
+.link {
+  text-align: center;
+  margin-top: -20px;
+  margin-bottom: 45px;
+}
+
+button {
+  background-color: #ff421d;
+  color: white;
+  border: none;
+  /* border-radius: 20px; */
+  height: 40px;
+  width: 140px;
+  letter-spacing: 1px;
+  font-size: 1.2em;
+  margin-left: 25px;
+  cursor: pointer;
+}
+
+button:focus {
+  outline: none;
+}
+
+.display-flex {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.footer-center {
+  text-align: center;
+}
+
+footer a {
+  font-size: 40px;
+}
+
+footer p {
+  margin-top: 0px;
+  margin-bottom: 0px;
+}
+
+@media only screen and (max-width:1057px) {
+  .display-flex {
+    display: block;
+    text-align: center;
+  }
+  .thanks{
+    margin-bottom: 20px;
+  }
+  button{
+    margin-left:0px;
+  }
+}
+
+@media only screen and (max-width:1024px) {
   .installation {
     width: 100%;
   }
 }
 
-@media(max-width:400px) {
+@media only screen and (max-width:400px) {
   .grid-section {
     grid-template-columns: 1fr;
     display: block;
@@ -216,12 +267,17 @@ a {
   .par {
     margin-top: 30px;
   }
+  footer a{
+    font-size:30px;
+  }
 }
-
-@media(max-width:320px) {
+@media only screen and (max-width:346px) {
+  button{
+    width:150px;
+  }
+}
+@media only screen and (max-width:320px) {
   .par p {
-    /* font-size: 18px; */
-    
     font-size: 1.5em;
     line-height: 42px;
   }
