@@ -2,9 +2,6 @@ var clc = require("cli-color");
 const terminalLink = require('terminal-link');
 
 
-
-
-
 function matchStats(link, option) {
 
     // GET JSON DATA
@@ -13,9 +10,9 @@ function matchStats(link, option) {
     request(link, function (error, response, body) {
         if (!error && response.statusCode == 200) {
             var JSONData = JSON.parse(body);
-       
-       
-    //    VARIABLES FOR GET JSON DATA
+
+
+            //    VARIABLES FOR GET JSON DATA
             this.seriesArray = JSONData.series;
             this.status = JSONData.status;
             this.venue = JSONData.venue;
@@ -30,6 +27,8 @@ function matchStats(link, option) {
 
             console.log("\n");
             console.log("\t\t🏏 CriCLI 🏏");
+            
+            // TEAM XENOX 
             const link = terminalLink("Team XENOX", 'https://www.teamxenox.com/');
 
             console.log("\n\t      \x1b[2m🔥 " + link + " 🔥\x1b[0m");
@@ -68,6 +67,7 @@ function matchStats(link, option) {
 
             //--------------------  START MATCH CONCLUDED BLOCK ------------------------- 
             else if (this.state == 'mom') {
+                console.log('in mom ............................................')
 
                 // Check For Toss
                 if (option.includes("t")) {
@@ -78,18 +78,23 @@ function matchStats(link, option) {
                 // Print Match Summary
                 if (JSONData.team1.s_name && JSONData.team2.s_name) {
                     console.log("\n---------      Match Summary      ---------");
+
                     if (JSONData.team1.id == this.score.batting.id) {
-                        console.log(clc.cyanBright(JSONData.team1.s_name + " : ") + clc.yellowBright(this.score.batting.score));
+                        console.log(clc.cyanBright(JSONData.team1.s_name + " : ") + clc.yellowBright(this.score.batting.score + "/" + this.score.max_overs));
                     }
                     if (JSONData.team2.id == this.score.batting.id) {
                         console.log(clc.cyanBright(JSONData.team2.s_name + " : ") + clc.yellowBright(this.score.batting.score));
                     }
-                    if (JSONData.team1.id == this.score.bowling.id) {
-                        console.log(clc.cyanBright(JSONData.team1.s_name + " : ") + clc.yellowBright(this.score.bowling.score));
+                    if (this.score.bowling) {
+                        if (JSONData.team1.id == this.score.bowling.id) {
+                            console.log(clc.cyanBright(JSONData.team1.s_name + " : ") + clc.yellowBright(this.score.bowling.score));
+                        }
+                        if (JSONData.team2.id == this.score.bowling.id) {
+                            console.log(clc.cyanBright(JSONData.team1.s_name + " : ") + clc.yellowBright(this.score.bowling.score));
+                        }
                     }
-                    if (JSONData.team2.id == this.score.bowling.id) {
-                        console.log(clc.cyanBright(JSONData.team1.s_name + " : ") + clc.yellowBright(this.score.bowling.score));
-                    }
+
+
                     console.log("-------------------------------------------");
 
                 }
@@ -124,7 +129,7 @@ function matchStats(link, option) {
 
 
             //--------------------  MATCH LIVE BLOCK --------------------------------- 
-            else if (this.state == 'inprogress') {
+            else if (this.state == 'inprogress' || this.state == 'innings break') {
 
                 if (JSONData.team1.s_name && JSONData.team2.s_name) {
                     console.log("\n---------      Match Summary      ---------");
@@ -146,11 +151,11 @@ function matchStats(link, option) {
 
                 }
 
-
+                
                 if (this.status && option.includes("t"))
-                    console.log(clc.cyanBright("Toss:" + this.status));
+                    console.log(clc.cyanBright("Match Status: " + this.status));
 
-
+                // Current Run Rate
                 if (this.score.crr)
                     console.log(clc.greenBright("CRR: " + this.score.crr));
 
@@ -159,7 +164,7 @@ function matchStats(link, option) {
                 if (this.score.batsman && option.includes("s")) {
                     console.log("----------     Batting Stats     ----------");
 
-
+                    // On strike Batsman
                     if (this.score.batsman[0] && this.score.batsman[0].strike == "1") {
                         var strikebatid = this.score.batsman[0].id
 
@@ -167,6 +172,19 @@ function matchStats(link, option) {
                             // console.log(i);
                             if (JSONData.players[i].id == strikebatid) {
                                 console.log(clc.yellowBright(JSONData.players[i].f_name + "*") + clc.cyanBright("  R: ") + clc.yellowBright(this.score.batsman[0].r) + clc.cyanBright(" B: ") + clc.yellowBright(this.score.batsman[0].b) + clc.cyanBright(" 4s: ") + clc.yellowBright(this.score.batsman[0]['4s']) + clc.cyanBright(" 6s: ") + clc.yellowBright(this.score.batsman[0]['6s']))
+
+                            }
+                        }
+
+                    }
+                    //  Off strike bastsman
+                    else if (this.score.batsman[0] && this.score.batsman[0].strike == "0") {
+                        var strikebatid = this.score.batsman[0].id
+
+                        for (i in JSONData.players) {
+                            // console.log(i);
+                            if (JSONData.players[i].id == strikebatid) {
+                                console.log(clc.yellowBright(JSONData.players[i].f_name) + clc.cyanBright("  R: ") + clc.yellowBright(this.score.batsman[0].r) + clc.cyanBright(" B: ") + clc.yellowBright(this.score.batsman[0].b) + clc.cyanBright(" 4s: ") + clc.yellowBright(this.score.batsman[0]['4s']) + clc.cyanBright(" 6s: ") + clc.yellowBright(this.score.batsman[0]['6s']))
 
                             }
                         }
@@ -184,9 +202,11 @@ function matchStats(link, option) {
 
                     }
 
+                    // Bowling Stats
                     if (this.score.bowler) {
                         console.log("----------     Bowling Stats     ----------");
                     }
+                    // Current bowler
                     if (this.score.bowler[0]) {
                         var strikebowlid = this.score.bowler[0].id;
 
@@ -195,9 +215,8 @@ function matchStats(link, option) {
                                 console.log(clc.yellowBright(JSONData.players[i].f_name + "* ") + clc.cyanBright(" O: ") + clc.yellowBright(this.score.bowler[0].o) + clc.cyanBright(" M: ") + clc.yellowBright(this.score.bowler[0].m) + clc.cyanBright(" R: ") + clc.yellowBright(this.score.bowler[0].r) + clc.cyanBright(" W: ") + clc.yellowBright(this.score.bowler[0].w))
                             }
                         }
-
                     }
-
+                    // Other end bowler
                     if (this.score.bowler[1]) {
                         var nonstrikebowlid = this.score.bowler[1].id;
 
@@ -212,21 +231,21 @@ function matchStats(link, option) {
                 }
 
 
-
+                //  Recent Score
                 if (this.score.prev_overs && option.includes("r")) {
                     console.log("-------------------------------------------");
                     console.log(clc.cyanBright("Recent: " + this.score.prev_overs));
                 }
 
-
+                // Partnership
                 if (this.score.prtshp)
                     console.log("Partnership: " + clc.blueBright(this.score.prtshp))
 
-            } 
+            }
             //--------------------  MATCH LIVE BLOCK ENDED --------------------------------- 
 
-            //--------------------  No fetch Data --------------------------------- 
-             
+            //--------------------  No fetch Data Block--------------------------------- 
+
             else {
                 console.log("-------------------------------------------");
                 console.log("\n\t☹️  Unable to Fetch Data !! ☹️\n");
@@ -236,6 +255,9 @@ function matchStats(link, option) {
 
 
             //-------------------- END NO FETCH BLOCK ------------------------------- 
+            
+            //--------------------  Commentary ---------------------------------
+            
             if (JSON.stringify(this.commentary[0].comm) && option.includes("c")) {
                 console.log("------------     Commentary     -----------");
                 var comments = this.commentary[0].comm;
@@ -244,23 +266,27 @@ function matchStats(link, option) {
                 console.log("-------------------------------------------");
 
             }
-            //--------------------  COMMON DETAILS --------------------------------- 
 
+            //--------------------  End of Commentary ---------------------------------
+            //--------------------  COMMON DETAILS --------------------------------- 
+            // Venue details
             if (this.venue.name)
                 console.log(clc.cyanBright("\nAt " + this.venue.name + " in " + this.venue.location))
-
+            
+            // Umpire details
             if (this.umpireName && option.includes("u"))
                 console.log("Umpires: " + clc.blueBright(this.umpireName.umpire1.name + ", " + this.umpireName.umpire2.name));
-            
+
             console.log("\n");
-            //--------------------  End of code --------------------------------- 
+            //--------------------  End Common Details --------------------------------- 
             
+        
 
+             //--------------------  End of IF statement ---------------------------------
         }
+             //--------------------  End of response block ---------------------------------
     })
-
+     //--------------------  End of Function ---------------------------------
 }
 
-module.exports = {
-    matchStats
-}
+module.exports = {matchStats}
