@@ -1,8 +1,6 @@
 #! /usr/bin/env node
 const program = require('commander');
 
-
-var criclnk = "https://www.cricbuzz.com/cricket-match/live-scores";
 var options = [];
 program
 .version('1.0.9')
@@ -61,8 +59,8 @@ if (!program.live && !program.commentary && !program.scorecard && !program.umpir
   options.push("l");
 }
 
-var MatchIndex =  require('./MatchIndex')
-MatchIndex.crawlerFunction(criclnk, options);
+var MatchIndex = require('./MatchIndex')
+MatchIndex.checkMatchAndDisplay(options);
 
 program.parse(process.argv);
 

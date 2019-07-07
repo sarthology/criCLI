@@ -67,8 +67,6 @@ function matchStats(link, option) {
 
             //--------------------  START MATCH CONCLUDED BLOCK ------------------------- 
             else if (this.state == 'mom') {
-                console.log('in mom ............................................')
-
                 // Check For Toss
                 if (option.includes("t")) {
                     console.log(clc.blueBright(JSONData.toss.winner + " won the toss and opted for " + JSONData.toss.decision));
@@ -90,7 +88,7 @@ function matchStats(link, option) {
                             console.log(clc.cyanBright(JSONData.team1.s_name + " : ") + clc.yellowBright(this.score.bowling.score));
                         }
                         if (JSONData.team2.id == this.score.bowling.id) {
-                            console.log(clc.cyanBright(JSONData.team1.s_name + " : ") + clc.yellowBright(this.score.bowling.score));
+                            console.log(clc.cyanBright(JSONData.team2.s_name + " : ") + clc.yellowBright(this.score.bowling.score));
                         }
                     }
 
