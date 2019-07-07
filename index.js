@@ -7,6 +7,8 @@ var options = [];
 program
 .version('1.0.9')
 .option('-l, --live', 'Live')
+.option('-lu, --live-updates', 'Live Updates')
+.option('-f, --frequency <frequency>', 'Frequency of updates in seconds')
 .option('-c, --commentary', 'Commentary')
 .option('-s, --scorecard', 'Scorecard')
 .option('-u, --umpires', 'Umpires')
@@ -19,6 +21,15 @@ program
 if (program.live || program.all) 
 {
   options.push("l");
+}
+
+if (program['live-updates'] || program.all) 
+{
+  options.push("lu");
+}
+
+if (program.frequency) {
+  options.frequency = program.frequency * 1000;  
 }
 
 if (program.commentary || program.all) 

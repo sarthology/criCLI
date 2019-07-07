@@ -1,37 +1,47 @@
 //fetching the Match Id from the URI link
 
 
-var Crawler = require("crawler");
-var { matchStats } = require("./MatchData");
-var matchUrlLink = "";
+const Crawler = require("crawler");
+const { matchStats } = require("./MatchData");
 
+const crawler = new Crawler();
 
-function crawlerFunction(criclink, option) {
+const callbackFunction = options => (error, res, done) => {
+    if (error) {
+        console.log(error);
+    }
+    else {
+        // Extract Details drom webpage
+        const $ = res.$;
+        const header = $(".cb-tms-itm").first().find(".cb-schdl").first().find('a');
+        let headerLink = header[0].attribs.href;
+        headerLink = headerLink.split('/');
+        const MatchId = headerLink[2];
+        const matchUrlLink = `https://www.cricbuzz.com/match-api/${MatchId}/commentary.json`;
+        matchStats(matchUrlLink, options);
+    }
+    done();
+}
 
-    var c = new Crawler({
+function queue(criclink, options) {
+    crawler.queue([{
+        uri: criclink,
         maxConnections: 10,
-        // This will be called for each crawled page
-        callback: function (error, res, done) {
-            if (error) {
-                console.log(error);
-            }
-            else {
-                // Extract Details drom webpage
-                var $ = res.$;
-                var header = $(".cb-tms-itm").first().find(".cb-schdl").first().find('a');
-                var headerLink = header[0].attribs.href;
-                headerLink = headerLink.split('/');
-                var MatchId = headerLink[2];
-                matchUrlLink = `https://www.cricbuzz.com/match-api/${MatchId}/commentary.json`;
-                matchStats(matchUrlLink, option);
+        callback: callbackFunction(options),
+    }]);
+}
 
-            }
-            done();
-        }
-    });
-    c.queue(criclink);
-
-
+function crawlerFunction(criclink, options) {
+    if (options.includes('lu')) {
+        queue(criclink, options);
+        setInterval(() => {
+            // clear console and set up a new queued object
+            process.stdout.write('\u001B[2J\u001B[0;0f');
+            queue(criclink, options);
+        }, options.frequency || 30000);
+    } else {
+        queue(criclink, options);
+    }
 }
 
 module.exports = { crawlerFunction }
