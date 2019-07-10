@@ -1,12 +1,12 @@
 #! /usr/bin/env node
 const program = require('commander');
 
-
-var criclnk = "https://www.cricbuzz.com/cricket-match/live-scores";
 var options = [];
 program
 .version('1.0.9')
 .option('-l, --live', 'Live')
+.option('-lu, --live-updates', 'Live Updates')
+.option('-f, --frequency <frequency>', 'Frequency of updates in seconds')
 .option('-c, --commentary', 'Commentary')
 .option('-s, --scorecard', 'Scorecard')
 .option('-u, --umpires', 'Umpires')
@@ -19,6 +19,15 @@ program
 if (program.live || program.all) 
 {
   options.push("l");
+}
+
+if (program['live-updates'] || program.all) 
+{
+  options.push("lu");
+}
+
+if (program.frequency) {
+  options.frequency = program.frequency * 1000;  
 }
 
 if (program.commentary || program.all) 
@@ -50,8 +59,8 @@ if (!program.live && !program.commentary && !program.scorecard && !program.umpir
   options.push("l");
 }
 
-var MatchIndex =  require('./MatchIndex')
-MatchIndex.crawlerFunction(criclnk, options);
+var MatchIndex = require('./MatchIndex')
+MatchIndex.checkMatchAndDisplay(options);
 
 program.parse(process.argv);
 
