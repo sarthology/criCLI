@@ -3,7 +3,7 @@ const program = require('commander');
 
 var options = [];
 program
-.version('1.0.9')
+.version('1.1.0')
 .option('-l, --live', 'Live')
 .option('-lu, --live-updates', 'Live Updates')
 .option('-f, --frequency <frequency>', 'Frequency of updates in seconds')
